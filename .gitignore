@@ -10,7 +10,6 @@
 
 # Libraries
 *.lib
-#*.a
 *.la
 *.lo
 
@@ -27,3 +26,13 @@
 *.i*86
 *.x86_64
 *.hex
+*.bin
+
+# Emacs
+.\#*
+\#*
+*~
+
+# Other
+tpfs/
+backup_disk
