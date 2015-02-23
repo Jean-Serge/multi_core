@@ -166,11 +166,12 @@ test_file: dir ifile file tools ${TESTDIR}test_file.c
 ###------------------------------
 ### Test core
 ###------------------------------------------------------------
-active-core: ${SRCDIR}active-core.c
-	${CC} ${CFLAGS} -o active-core${SUFFIX} ${SRCDIR}active-core.c ${LIBS} ${INCDIR}
+COREDIR = ${SRCDIR}core_test/
+active-core: ${COREDIR}active-core.c
+	${CC} ${CFLAGS} -o active-core${SUFFIX} ${COREDIR}active-core.c ${LIBS} ${INCDIR}
 
-active-core-int: ${SRCDIR}active-core.c
-	${CC} ${CFLAGS} -o active-core-int${SUFFIX} ${SRCDIR}active-core-int.c ${LIBS} ${INCDIR}
+active-core-int: ${COREDIR}active-core.c
+	${CC} ${CFLAGS} -o active-core-int${SUFFIX} ${COREDIR}active-core-int.c ${LIBS} ${INCDIR}
 
 
 ###------------------------------
