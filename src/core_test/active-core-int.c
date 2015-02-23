@@ -24,7 +24,7 @@ void empty_irq(){
 
 int main(int argc, char *argv[]){
 	int i;
-	if(init_hardware("etc/core.ini") == 0){
+	if(init_hardware("etc/hardware.ini") == 0){
 		printf("Erreur dans l'initialisation du hardware.\n");
 		return 1;
 	}

@@ -97,9 +97,11 @@ void yield(){
 	struct ctx_s *ctx;
 	int nb_terminated;
 
+	printf("Yield\n");
+	_out(0xF8, 0xFFFFFFFF-20);
 	if(crt_ctx == NULL)
 		return;
-	_out(0xF8, 0xFFFFFFFF-20);
+
 	irq_disable();
 
 	nb_terminated = 0;
