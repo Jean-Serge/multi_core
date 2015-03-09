@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "hw.h"
+#include "hw_info.h"
 
 #define TERMINATED 0 
 #define READY      1 /* changement de context, pas d'appel de fonction */
@@ -66,7 +67,7 @@ extern void switch_to_ctx(struct ctx_s *ctx);
 extern void yield();
 
 /*************************  Gestion liste circulaire  *************************/
-extern void add_ctx(struct ctx_s *ctx);
+extern void add_ctx(struct ctx_s *ctx, int core);
 struct ctx_s *next_ctx();
 
 /************************* Gestion des interruptions  *************************/
