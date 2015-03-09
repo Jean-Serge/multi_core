@@ -50,18 +50,11 @@ int shell(char **argc, int i){
 	int isexit;
 	int ret_val;
 	isexit = 0;
-	/* if(mount(0) != 1){ */
-	/* 	printf("Impossible de monter le volume 0"); */
-	/* 	return 0; */
-	/* } */
-	printf("mount ? %d\n", mount(0));
+
 	while(1 && !isexit)
 	{
 		ret_val = NOT_FOUND_ERROR;
-		/* display_prompt(); */
 		cmd = readline(prompt);
-		/* cmd = (char *)malloc(CMD_SIZE * sizeof(char)); */
-		/* my_fgets(cmd, CMD_SIZE); */
 
 		if(cmd != NULL)               /* En cas de ctrl-D */
 			ret_val = execute(cmd);
@@ -74,7 +67,7 @@ int shell(char **argc, int i){
 		if(ret_val != NOT_FOUND_ERROR)
 			add_history(cmd);
 	}
-	printf("Have a nice day! Love.\n");
+	printf("Have a nice day! Dear.\n");
 	return EXIT_SUCCESS;
 }
 

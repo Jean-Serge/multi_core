@@ -22,12 +22,12 @@ unsigned int split_cmd(char *cmd, char **split, char *delim)
 
 		split[i++] = token;
 	}
-
-	/* Décommenter pour afficher le résultat du split */
-	/* for(j = 0 ; j < i ; j++) */
-	/*   printf("%s\n", split[j]); */
-
 	return i;
+}
+
+int nope(char **string, int nope){
+	printf("nope\n");
+	return 0;
 }
 
 int execute(char *cmd)
@@ -36,6 +36,11 @@ int execute(char *cmd)
 	char **split = (char **)malloc(sizeof(char *) * 10);
 	int isparallele = 0;
 	int (*funct_ptr)(char **, int);
+
+	/******************************/
+    /* Décommente moi pour tester */
+    /******************************/
+	funct_ptr = nope;
 
 	if(*cmd == '&'){
 		isparallele = 1;
@@ -48,19 +53,25 @@ int execute(char *cmd)
 	if(cmd == NULL)
 		return 0;
 	if(strcmp(cmd, "ls") == 0)
-		funct_ptr = my_ls;
+		printf("ls\n");
+		/* funct_ptr = my_ls; */
 	else if(strcmp(cmd, "cd") == 0)
-		funct_ptr = my_cd;
+		printf("cd\n");
+		/* funct_ptr = my_cd; */
 	else if(strcmp(cmd,"pwd") == 0)
-		funct_ptr = my_pwd;
+		printf("pwd\n");
+		/* funct_ptr = my_pwd; */
 	else if(strcmp(cmd, "mkdir") == 0)
-		funct_ptr = my_mkdir;
+		printf("mkdir\n");
+		/* funct_ptr = my_mkdir; */
 	else if(strcmp(cmd, "dumps") == 0)
-		funct_ptr = my_dumps;
+		printf("dumps\n");
+		/* funct_ptr = my_dumps; */
 	else if(strcmp(cmd, "exit") == 0)
-	  return EXIT_VALUE;
+		return EXIT_VALUE;
 	else if(strcmp(cmd, "compute") == 0)
-	  funct_ptr = my_compute;
+		printf("compute\n");
+		/* funct_ptr = my_compute; */
 	else
 	{
 		printf("Commande inconnue\n");
