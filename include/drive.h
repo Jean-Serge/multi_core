@@ -37,8 +37,6 @@ extern struct disk_info_s *get_disk_info();
 /***************************  Utilitaire multiples  ***************************/
 extern int is_correct_coordinates(int sec, int cyl);
 
-extern void mkhd();
-
 
 /*************************  Commande de bas niveau  ***************************/
 extern void move_head(unsigned int cyl, unsigned int sec);
