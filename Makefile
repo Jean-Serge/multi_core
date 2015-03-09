@@ -21,7 +21,7 @@ rvol${SUFFIX} tfs${SUFFIX} if_status${SUFFIX} if_pfile${SUFFIX} if_cfile${SUFFIX
 shell${SUFFIX}\
 prod_con${SUFFIX} sched${SUFFIX}
 
-all: clean initilisation disque scheduler shell
+all: clean initialisation disque scheduler shell
 
 disque: create-disk dmps frmt drive volume filesystem ifile dvol print_mbr mkvol mknfs rvol\
 if_status if_pfile if_nfile if_dfile if_cfile shell
@@ -42,16 +42,16 @@ initialisation: ${SRCDIR}initialisation.c ${INCLUDE}initialisation.h scheduler
 FSDIR = ${SRCDIR}disque/
 
 create-disk: drive ${FSDIR}create_disk.c
-	$(CC) $(CFLAGS) -o create-disk${SUFFIX} drive.o hw.o context.o ${FSDIR}create_disk.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o create-disk${SUFFIX} drive.o hw.o context.o initialisation.o ${FSDIR}create_disk.c ${LIBS} ${INCDIR}
 
 dmps: drive volume ${FSDIR}dmps.c
-	$(CC) $(CFLAGS) -o dmps${SUFFIX} drive.o hw.o context.o ${FSDIR}dmps.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o dmps${SUFFIX} drive.o hw.o context.o initialisation.o ${FSDIR}dmps.c ${LIBS} ${INCDIR}
 
 frmt: drive volume context ${FSDIR}frmt.c
-	$(CC) $(CFLAGS) -o frmt${SUFFIX} context.o hw.o drive.o volume.o tools.o ${FSDIR}frmt.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o frmt${SUFFIX} context.o hw.o drive.o volume.o tools.o initialisation.o ${FSDIR}frmt.c ${LIBS} ${INCDIR}
 
 drive: context ${FSDIR}drive.c ${INCLUDE}drive.h
-	$(CC) $(CFLAGS) -o drive.o -c ${FSDIR}drive.c ${INCDIR}
+	$(CC) $(CFLAGS) -o drive.o initialisation.o -c ${FSDIR}drive.c ${INCDIR}
 
 volume: tools drive ${FSDIR}volume.c ${INCLUDE}volume.h
 	$(CC) $(CFLAGS) -o volume.o -c ${FSDIR}volume.c ${INCDIR}
@@ -72,34 +72,34 @@ dir:  ${FSDIR}dir.c ${INCLUDE}dir.h
 	$(CC) $(CFLAGS) -o dir.o -c ${FSDIR}dir.c ${INCDIR}
 
 dvol: volume drive ${FSDIR}dvol.c
-	$(CC) $(CFLAGS) -o dvol${SUFFIX} drive.o context.o hw.o volume.o tools.o ${FSDIR}dvol.c ${LIBS}  ${INCDIR}
+	$(CC) $(CFLAGS) -o dvol${SUFFIX} drive.o context.o hw.o volume.o tools.o initialisation.o ${FSDIR}dvol.c ${LIBS}  ${INCDIR}
 
 mkvol: volume drive ${FSDIR}mkvol.c
-	$(CC) $(CFLAGS) -o mkvol${SUFFIX} drive.o context.o hw.o volume.o tools.o ${FSDIR}mkvol.c ${LIBS}  ${INCDIR}
+	$(CC) $(CFLAGS) -o mkvol${SUFFIX} drive.o initialisation.o context.o hw.o volume.o tools.o ${FSDIR}mkvol.c ${LIBS}  ${INCDIR}
 
 mknfs: volume drive filesystem tools ifile ${FSDIR}mknfs.c
-	$(CC) $(CFLAGS) -o mknfs${SUFFIX} drive.o context.o hw.o volume.o filesystem.o tools.o ifile.o ${FSDIR}mknfs.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o mknfs${SUFFIX} drive.o context.o initialisation.o hw.o volume.o filesystem.o tools.o ifile.o ${FSDIR}mknfs.c ${LIBS} ${INCDIR}
 
 print_mbr: volume drive ${FSDIR}print_mbr.c
-	$(CC) $(CFLAGS) -o print_mbr${SUFFIX} drive.o hw.o context.o volume.o tools.o ${FSDIR}print_mbr.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o print_mbr${SUFFIX} drive.o hw.o context.o volume.o initialisation.o tools.o ${FSDIR}print_mbr.c ${LIBS} ${INCDIR}
 
 rvol: volume drive ${FSDIR}rvol.c
-	$(CC) $(CFLAGS) -o rvol${SUFFIX} drive.o volume.o context.o hw.o tools.o ${FSDIR}rvol.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o rvol${SUFFIX} drive.o volume.o context.o hw.o tools.o initialisation.o ${FSDIR}rvol.c ${LIBS} ${INCDIR}
 
 if_status: filesystem ${FSDIR}if_status.c
-	$(CC) $(CFLAGS) -o if_status${SUFFIX} drive.o volume.o hw.o context.o filesystem.o tools.o ${FSDIR}if_status.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_status${SUFFIX} drive.o volume.o hw.o context.o filesystem.o tools.o initialisation.o ${FSDIR}if_status.c ${LIBS} ${INCDIR}
 
 if_pfile: ifile ${FSDIR}if_pfile.c
-	$(CC) $(CFLAGS) -o if_pfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o ifile.o tools.o ${FSDIR}if_pfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_pfile${SUFFIX} drive.o volume.o hw.o context.o initialisation.o filesystem.o ifile.o tools.o ${FSDIR}if_pfile.c ${LIBS} ${INCDIR}
 
 if_nfile: ifile ${FSDIR}if_nfile.c
-	$(CC) $(CFLAGS) -o if_nfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o ifile.o tools.o ${FSDIR}if_nfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_nfile${SUFFIX} drive.o volume.o hw.o context.o initialisation.o filesystem.o ifile.o tools.o ${FSDIR}if_nfile.c ${LIBS} ${INCDIR}
 
 if_dfile: ifile ${FSDIR}if_dfile.c
-	$(CC) $(CFLAGS) -o if_dfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o ifile.o tools.o ${FSDIR}if_dfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_dfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o initialisation.o ifile.o tools.o ${FSDIR}if_dfile.c ${LIBS} ${INCDIR}
 
 if_cfile: ifile ${FSDIR}if_cfile.c
-	$(CC) $(CFLAGS) -o if_cfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o ifile.o tools.o ${FSDIR}if_cfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_cfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o initialisation.o ifile.o tools.o ${FSDIR}if_cfile.c ${LIBS} ${INCDIR}
 
 
 ###------------------------------
@@ -109,7 +109,7 @@ if_cfile: ifile ${FSDIR}if_cfile.c
 CMDDIR = ${SRCDIR}shell/
 
 shell: cmd dir ifile volume filesystem tools scheduler ${CMDDIR}shell.c
-	$(CC) $(CFLAGS) -o shell${SUFFIX} cmd.o file.o ifile.o drive.o filesystem.o tools.o volume.o dir.o my_ls.o my_cd.o my_pwd.o my_compute.o my_mkdir.o my_dumps.o context.o hw.o ${CMDDIR}shell.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o shell${SUFFIX} initialisation.o cmd.o file.o ifile.o drive.o filesystem.o tools.o volume.o dir.o my_ls.o my_cd.o my_pwd.o my_compute.o my_mkdir.o my_dumps.o context.o hw.o ${CMDDIR}shell.c ${LIBS} ${INCDIR}
 
 cmd: my_cd my_ls my_pwd my_compute my_mkdir my_dumps ${CMDDIR}cmd.c ${INCLUDE}cmd.h
 	$(CC) $(CFLAGS) -o cmd.o -c ${CMDDIR}cmd.c ${INCDIR}
@@ -158,13 +158,13 @@ tp5: context hw
 TESTDIR = ${SRCDIR}test/
 
 tconvert_blc: volume drive ${TESTDIR}test_convert_blc.c
-	$(CC) $(CFLAGS) -o test_convert_blc${SUFFIX} drive.o volume.o tools.o ${TESTDIR}test_convert_blc.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o test_convert_blc${SUFFIX} initialisation.o drive.o volume.o tools.o ${TESTDIR}test_convert_blc.c ${LIBS} ${INCDIR}
 
 tfilesystem: filesystem volume drive ${TESTDIR}test_filesystem.c
-	$(CC) $(CFLAGS) -o tfs${SUFFIX} drive.o volume.o  filesystem.o tools.o ${TESTDIR}test_filesystem.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o tfs${SUFFIX} drive.o volume.o  initialisation.o filesystem.o tools.o ${TESTDIR}test_filesystem.c ${LIBS} ${INCDIR}
 
 test_file: dir ifile file tools ${TESTDIR}test_file.c
-	$(CC) $(CFLAGS) -o test_file${SUFFIX} drive.o volume.o filesystem.o ifile.o file.o dir.o tools.o ${TESTDIR}test_file.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o test_file${SUFFIX} drive.o volume.o initialisation.o filesystem.o ifile.o file.o dir.o tools.o ${TESTDIR}test_file.c ${LIBS} ${INCDIR}
 
 
 
