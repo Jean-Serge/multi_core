@@ -75,8 +75,6 @@ int main(void)
 {
 
 	wd = "/";
-
-	mkhd();
 	create_ctx(200000, shell, NULL, 0, "shell");
 	irq_enable();
 	start_sched();
