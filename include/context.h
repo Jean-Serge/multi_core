@@ -6,7 +6,7 @@
 #include <assert.h>
 #include "hw.h"
 
-#define TERMINATED 0 
+#define TERMINATED 0
 #define READY      1 /* changement de context, pas d'appel de fonction */
 #define ACTIVATED  2 /* changement de context + appel de fonction */
 #define BLOCKED    3 /* Blocked by a semaphore */
@@ -66,7 +66,7 @@ extern void switch_to_ctx(struct ctx_s *ctx);
 extern void yield();
 
 /*************************  Gestion liste circulaire  *************************/
-extern void add_ctx(struct ctx_s *ctx);
+extern void add_ctx(struct ctx_s ctx);
 struct ctx_s *next_ctx();
 
 /************************* Gestion des interruptions  *************************/
