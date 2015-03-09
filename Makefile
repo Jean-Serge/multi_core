@@ -21,7 +21,7 @@ rvol${SUFFIX} tfs${SUFFIX} if_status${SUFFIX} if_pfile${SUFFIX} if_cfile${SUFFIX
 shell${SUFFIX}\
 prod_con${SUFFIX} sched${SUFFIX}
 
-all: clean disque scheduler shell
+all: clean initilisation disque scheduler shell
 
 disque: create-disk dmps frmt drive volume filesystem ifile dvol print_mbr mkvol mknfs rvol\
 if_status if_pfile if_nfile if_dfile if_cfile shell
@@ -30,6 +30,11 @@ scheduler: context
 
 test: tconvert_blc tfilesystem test_file
 
+###------------------------------
+### Initialisation
+###------------------------------------------------------------
+initialisation: ${SRCDIR}initialisation.c ${INCLUDE}initialisation.h scheduler
+	$(CC) $(CFLAGS) -o initialisation.o -c ${SRCDIR}/initialisation.c ${LIBS} ${INCDIR}
 
 ###------------------------------
 ### Main rules

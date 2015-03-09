@@ -10,7 +10,6 @@
 
 /* Code de retour */
 #define SUCCESS 0
-#define HW_INIT_ERROR 1
 
 /***************************** Macro de deboggage *****************************/
 #define dmps_v (int cyl, int sect){\
