@@ -1,14 +1,9 @@
 #include "context.h"
 #include <stdlib.h>
 
-/* struct ctx_s *crt_ctx = NULL; */
-/* struct ctx_s *main_ctx = NULL; */
+struct ctx_s *crt_ctx = NULL;
+struct ctx_s *main_ctx = NULL;
 
-
-struct ctx_s *crt_ctx[N_CORE_MAX];
-struct ctx_s *main_ctx[N_CORE_MAX];
-
-int init_done = 0
 
 int nb_ctx = 0;
 
@@ -32,27 +27,16 @@ int init_ctx(struct ctx_s *ctx, int stack_size, func_t f, char **args, int argc)
 	return C_RETURN_SUCCESS;
 }
 
-int get_core_id(){
-	return _in(CORE_ID);
-}
-
 int create_ctx(int stack_size, func_t f, char **args, int argc, char *name){
-	struct ctx_s ctx;
+	struct ctx_s *ctx;
 
-	if(!init_done){
-		int i;
-		for(i = 0; i < N_CORE_MAX; i++){
-			crt_ctx[i] == NULL;
-		}
-		init_done = 1;
-	}
 
 	irq_disable();
 	ctx = (struct ctx_s*)malloc(sizeof(struct ctx_s));
 	fprintf(stderr,"Creating context %s (%p)\n", name, ctx);
 	ctx->ctx_stack = (char *)malloc(stack_size);
-	init_ctx(&ctx, stack_size, f, args, argc);
-	ctx.ctx_name = name;
+	init_ctx(ctx, stack_size, f, args, argc);
+	ctx->ctx_name = name;
 
 	add_ctx(ctx);
 	nb_ctx++;
@@ -189,19 +173,16 @@ void switch_to_ctx(struct ctx_s *ctx){
 }
 
 /*************************  Gestion liste circulaire  *************************/
-void add_ctx(struct ctx_s ctx){
-	int core_id = _in(CORE_ID);
+void add_ctx(struct ctx_s *ctx){
 	irq_disable();
-	fprintf(stderr, "add ctx %s to core %d\n", ctx->ctx_name, core_id);
-	if(crt_ctx[core_id].ctx_magic != CTX_MAGIC){
-		crt_ctx[core_id] = ctx;
-		crt_ctx[core_id].ctx_next = ctx;
+	fprintf(stderr, "add ctx %s\n", ctx->ctx_name);
+	if(crt_ctx == NULL){
+		crt_ctx = ctx;
+		ctx->ctx_next = ctx;
 	}
 	else{
-		/* ctx->ctx_next = crt_ctx->ctx_next; */
-		/* crt_ctx->ctx_next = ctx; */
-		ctx.ctx_next = crt_ctx[core_id].ctx_next;
-		crt_ctx[core_id].ctx_next = ctx;
+		ctx->ctx_next = crt_ctx->ctx_next;
+		crt_ctx->ctx_next = ctx;
 	}
 	irq_enable();
 }

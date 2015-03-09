@@ -25,6 +25,4 @@
 #define TIMER_ALARM 0xF8
 #define TIMER_PARAM 0xF4
 
-#define N_CORE_MAX 16
-
 #endif

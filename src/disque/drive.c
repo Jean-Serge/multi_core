@@ -87,12 +87,12 @@ void sleep()
 }
 
 void function(){
-	/* int i; */
-	/* /\* while(1) *\/ */
-	/*   { */
-	/* 	printf("%d\n", _in(CORE_ID)); */
-	/* 	for(i = 0; i < 100000000; i++); */
-	/*   } */
+  int n_core = _in(CORE_ID);
+  
+  printf("Core : %d\n", n_core);
+  fflush(stdin);
+  if(n_core == 0)
+    while(1);
 }
 
 /*
@@ -113,7 +113,7 @@ void mkhd(){
 	for(i = 0; i < NB_HW_IRQ; i++){
 		IRQVECTOR[i] = empty_fun;
 	}
-	/* IRQVECTOR[0] = function; */
+	IRQVECTOR[0] = function;
        	IRQVECTOR[TIMER_IRQ] = yield;
 
 	

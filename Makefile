@@ -5,7 +5,7 @@ ROOTDIR=.
 SRCDIR=src/
 
 CC	= gcc
-CFLAGS	= -Wall -m32  -fdiagnostics-color=auto
+CFLAGS	= -Wall -m32
 CFLAGS  += -g
 LIBDIR  = $(ROOTDIR)/lib
 INCLUDE = $(ROOTDIR)/include/
