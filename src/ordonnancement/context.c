@@ -6,7 +6,7 @@
 
 struct ctx_s *ctxs[N_CORE_MAX];
 
-int current_core = 0;
+/* int current_core = 0; */
 int nb_ctx = 0;
 
 void del_ctx(struct ctx_s *ctx);
@@ -30,6 +30,11 @@ int init_ctx(struct ctx_s *ctx, int stack_size, func_t f, char **args, int argc)
 }
 
 int create_ctx(int stack_size, func_t f, char **args, int argc, char *name){
+  return create_ctx_on_core(stack_size, f, args, argc, name, 0);
+}
+
+
+int create_ctx_on_core(int stack_size, func_t f, char **args, int argc, char *name, int core){
 	struct ctx_s *ctx;
 
 	irq_disable();
@@ -39,7 +44,7 @@ int create_ctx(int stack_size, func_t f, char **args, int argc, char *name){
 	init_ctx(ctx, stack_size, f, args, argc);
 	ctx->ctx_name = name;
 
-	add_ctx(ctx, current_core++ % N_CORE_MAX);
+	add_ctx(ctx, core % N_CORE_MAX);
 	nb_ctx++;
 	irq_enable();
 	return C_RETURN_SUCCESS;

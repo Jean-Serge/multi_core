@@ -50,6 +50,9 @@ struct ctx_s {
 
 extern int create_ctx(int stack_size, func_t f, char **args, int argc, char *name);
 
+extern int create_ctx_on_core(int stack_size, func_t f, char **args, int argc, char *name, int core);
+
+
 /**************************** Ordonancement disque ****************************/
 /**
    Sauvegarde le contexte courant dans drive_ctx. Déclenche un changement de
