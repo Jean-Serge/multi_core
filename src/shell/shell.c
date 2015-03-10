@@ -73,10 +73,11 @@ int shell(char **argc, int i){
 
 int main(void)
 {
+	mkhd();
 	wd = "/";
 	create_ctx(200000, shell, NULL, 0, "shell");
 	irq_enable();
 	start_sched();
-      
+
 	return EXIT_SUCCESS;
 }

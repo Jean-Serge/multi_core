@@ -20,11 +20,13 @@
 
 
 void irq_disable(){
+	printf("Disable\n");
 	enable = 0;
 	_mask(3);
 }
 
 void irq_enable(){
+	printf("Enable\n");
 	enable = 1;
 	_mask(1);
 }

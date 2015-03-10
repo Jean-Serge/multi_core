@@ -1,5 +1,7 @@
 #include "cmd.h"
 
+int core = 0;
+
 /**
  * TODO : sécuriser les appels à realloc
  * TODO : voir la fonction strtok_r pour sécuriser
@@ -69,9 +71,10 @@ int execute(char *cmd)
 		/* funct_ptr = my_dumps; */
 	else if(strcmp(cmd, "exit") == 0)
 		return EXIT_VALUE;
-	else if(strcmp(cmd, "compute") == 0)
+	else if(strcmp(cmd, "compute") == 0){
 		printf("compute\n");
-		/* funct_ptr = my_compute; */
+		funct_ptr = my_compute;
+	}
 	else
 	{
 		printf("Commande inconnue\n");
@@ -82,7 +85,12 @@ int execute(char *cmd)
 		(* funct_ptr)(split, argc);
 	}
 	else{
-		create_ctx(2048, funct_ptr, split, argc, cmd);
+		printf("Create task on core %d\n", core);
+		create_ctx_on_core(2048, funct_ptr, split, argc, cmd, core);
+		core = (core + 1)% N_CORE_MAX;
+		if(core == 0){
+			core++;
+		}
 	}
 
 	return 0;

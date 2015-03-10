@@ -10,4 +10,5 @@
 #define HW_INIT_ERROR 1
 
 extern void mkhd();
+extern void empty_fun();
 #endif

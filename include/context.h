@@ -6,8 +6,9 @@
 #include <assert.h>
 #include "hw.h"
 #include "hw_info.h"
+#include "initialisation.h"
 
-#define TERMINATED 0 
+#define TERMINATED 0
 #define READY      1 /* changement de context, pas d'appel de fonction */
 #define ACTIVATED  2 /* changement de context + appel de fonction */
 #define BLOCKED    3 /* Blocked by a semaphore */

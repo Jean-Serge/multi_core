@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "return_value.h"
+#include "hw_info.h"
 #include "my_ls.h"
 #include "my_cd.h"
 #include "my_pwd.h"

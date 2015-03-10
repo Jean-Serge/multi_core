@@ -10,6 +10,7 @@
 #include "cmd.h"
 #include "context.h"
 #include "return_value.h"
+#include "initialisation.h"
 
 #define CMD_SIZE 101
 

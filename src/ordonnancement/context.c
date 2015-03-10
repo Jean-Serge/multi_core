@@ -1,7 +1,7 @@
 #include "context.h"
 #include <stdlib.h>
 
-struct ctx_s *ctxs[N_CORE_MAX];
+struct ctx_s *ctxs[N_CORE_MAX] = {NULL};
 
 int nb_ctx = 0;
 
@@ -26,7 +26,7 @@ int init_ctx(struct ctx_s *ctx, int stack_size, func_t f, char **args, int argc)
 }
 
 int create_ctx(int stack_size, func_t f, char **args, int argc, char *name){
-  return create_ctx_on_core(stack_size, f, args, argc, name, 0);
+  return create_ctx_on_core(stack_size, f, args, argc, name, 1);
 }
 
 
@@ -99,9 +99,9 @@ void yield(){
 	struct ctx_s *ctx;
 	int nb_terminated;
 	int core = _in(CORE_ID);
-	
+
 	printf("Yield\n");
-	_out(0xF8, 0xFFFFFFFF-20);
+	_out(TIMER_ALARM, 0xFFFFFFFF-20);
 
 	irq_disable();
 
@@ -144,7 +144,6 @@ void switch_to_ctx(struct ctx_s *ctx){
 		irq_enable();
 		ctxs[core]->ctx_func(ctxs[core]->ctx_args, ctxs[core]->ctx_argc);
 		irq_disable();
-
 		ctxs[core]->ctx_etat = TERMINATED;
 		/* fprintf(stderr,"ctx %s is TERMINATED\n", crt_ctx->ctx_name); */
 		printf("ctx %s is TERMINATED\n", ctxs[core]->ctx_name);
@@ -157,10 +156,10 @@ void switch_to_ctx(struct ctx_s *ctx){
 
 /*************************  Gestion liste circulaire  *************************/
 void add_ctx(struct ctx_s *ctx, int core){
-  /* TODO : voir pour rechercher le core le plus utilisé pour répartir 
+  /* TODO : voir pour rechercher le core le plus utilisé pour répartir
      la charge lors d'un ajout de contexte */
 	irq_disable();
-       
+
 	fprintf(stderr, "add ctx %s\n", ctx->ctx_name);
 	if(ctxs[core] == NULL){
 		ctxs[core] = ctx;
@@ -168,6 +167,7 @@ void add_ctx(struct ctx_s *ctx, int core){
 	}
 	else{
 		ctx->ctx_next = ctxs[core]->ctx_next;
+		printf("%x\n",ctxs[core]->ctx_magic);
 		ctxs[core]->ctx_next = ctx;
 	}
 
@@ -208,10 +208,10 @@ struct ctx_s *next_ctx(){
 
 	irq_disable();
 	fprintf(stderr, "next ctx of ctx %s", ctxs[core]->ctx_name);
-	
+
 
 	nxt = ctxs[core];
-	
+
 
 	/* fprintf(stderr, "is ctx %s", nxt->ctx_name); */
 	irq_enable();

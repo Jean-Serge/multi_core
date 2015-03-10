@@ -4,15 +4,16 @@
   Fonction ne faissant rien. Utile pour initialiser les fonctions appelé lors
   des interruptions du matériel.
  */
-void empty_fun(){return;}
+void empty_fun(){
+	while(1);
+}
 
 void function(){
-  int n_core = _in(CORE_ID);
-
-  printf("Core : %d\n", n_core);
-  fflush(stdin);
-  if(n_core == 0)
-    while(1);
+	int n_core = _in(CORE_ID);
+	int i;
+	printf("Core : %d\n", n_core);
+	create_ctx_on_core(200000, empty_fun, NULL, 0, "empty_fun", n_core);
+	yield();
 }
 
 /*
@@ -44,6 +45,11 @@ void mkhd(){
 	_out(0xF8, 0xFFFFFFFF - 20);
 
 	/* create_ctx(65536, empty, NULL, 0, "vide"); */
+
+	for(i = 1; i < N_CORE_MAX; i++){
+		_out(CORE_IRQMAPPER+i, 0xF);
+	}
+	_out(CORE_IRQMAPPER, 0x0);
 
 	/* On active les 4 premiers core 0xF -> 1111 */
 	_out(CORE_STATUS, 0xF);
