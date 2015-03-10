@@ -16,10 +16,13 @@ SUFFIX  = .bin
 ###------------------------------
 ### Main targets
 ###------------------------------------------------------------
-BINARIES=active-core${SUFFIX} create-disk${SUFFIX} dmps${SUFFIX} dvol${SUFFIX} frmt${SUFFIX} mkvol${SUFFIX} print_mbr${SUFFIX} mknfs${SUFFIX} test_file${SUFFIX}\
-rvol${SUFFIX} tfs${SUFFIX} if_status${SUFFIX} if_pfile${SUFFIX} if_cfile${SUFFIX} if_nfile${SUFFIX} if_dfile${SUFFIX} test_convert_blc${SUFFIX}\
-shell${SUFFIX}\
-prod_con${SUFFIX} sched${SUFFIX}
+BINARIES=$(addsuffix ${SUFFIX},\
+active-core \
+create-disk dmps dvol frmt mkvol print_mbr mknfs rvol tfs\
+test_file if_status if_pfile if_cfile if_nfile if_dfile test_convert_blc \
+shell \
+prod_con sched)
+
 
 all: clean initialisation disque scheduler shell
 
@@ -41,15 +44,7 @@ initialisation: ${SRCDIR}initialisation.c ${INCLUDE}initialisation.h scheduler
 ###------------------------------------------------------------
 FSDIR = ${SRCDIR}disque/
 
-create-disk: drive ${FSDIR}create_disk.c
-	$(CC) $(CFLAGS) -o create-disk${SUFFIX} drive.o hw.o context.o initialisation.o ${FSDIR}create_disk.c ${LIBS} ${INCDIR}
-
-dmps: drive volume ${FSDIR}dmps.c
-	$(CC) $(CFLAGS) -o dmps${SUFFIX} drive.o hw.o context.o initialisation.o ${FSDIR}dmps.c ${LIBS} ${INCDIR}
-
-frmt: drive volume context ${FSDIR}frmt.c
-	$(CC) $(CFLAGS) -o frmt${SUFFIX} context.o hw.o drive.o volume.o tools.o initialisation.o ${FSDIR}frmt.c ${LIBS} ${INCDIR}
-
+# Construction de fichiers .o
 drive: context ${FSDIR}drive.c ${INCLUDE}drive.h
 	$(CC) $(CFLAGS) -o drive.o -c ${FSDIR}drive.c ${INCDIR}
 
@@ -71,35 +66,52 @@ file: filesystem ${FSDIR}file.c ${INCLUDE}file.h
 dir:  ${FSDIR}dir.c ${INCLUDE}dir.h
 	$(CC) $(CFLAGS) -o dir.o -c ${FSDIR}dir.c ${INCDIR}
 
+# Executables
+OFILE = drive.o context.o hw.o initialisation.o
+
+create-disk: drive ${FSDIR}create_disk.c
+	$(CC) $(CFLAGS) -o create-disk${SUFFIX} ${OFILE} ${FSDIR}create_disk.c ${LIBS} ${INCDIR}
+
+dmps: drive volume ${FSDIR}dmps.c
+	$(CC) $(CFLAGS) -o dmps${SUFFIX} ${OFILE} ${FSDIR}dmps.c ${LIBS} ${INCDIR}
+
+
+OFILE_2 = ${OFILE} volume.o tools.o
+frmt: drive volume context ${FSDIR}frmt.c
+	$(CC) $(CFLAGS) -o frmt${SUFFIX} ${OFILE_2} ${FSDIR}frmt.c ${LIBS} ${INCDIR}
+
 dvol: volume drive ${FSDIR}dvol.c
-	$(CC) $(CFLAGS) -o dvol${SUFFIX} drive.o context.o hw.o volume.o tools.o initialisation.o ${FSDIR}dvol.c ${LIBS}  ${INCDIR}
+	$(CC) $(CFLAGS) -o dvol${SUFFIX} ${OFILE_2} ${FSDIR}dvol.c ${LIBS}  ${INCDIR}
 
 mkvol: volume drive ${FSDIR}mkvol.c
-	$(CC) $(CFLAGS) -o mkvol${SUFFIX} drive.o initialisation.o context.o hw.o volume.o tools.o ${FSDIR}mkvol.c ${LIBS}  ${INCDIR}
-
-mknfs: volume drive filesystem tools ifile ${FSDIR}mknfs.c
-	$(CC) $(CFLAGS) -o mknfs${SUFFIX} drive.o context.o initialisation.o hw.o volume.o filesystem.o tools.o ifile.o ${FSDIR}mknfs.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o mkvol${SUFFIX} ${OFILE_2} ${FSDIR}mkvol.c ${LIBS}  ${INCDIR}
 
 print_mbr: volume drive ${FSDIR}print_mbr.c
-	$(CC) $(CFLAGS) -o print_mbr${SUFFIX} drive.o hw.o context.o volume.o initialisation.o tools.o ${FSDIR}print_mbr.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o print_mbr${SUFFIX} ${OFILE_2} ${FSDIR}print_mbr.c ${LIBS} ${INCDIR}
 
 rvol: volume drive ${FSDIR}rvol.c
-	$(CC) $(CFLAGS) -o rvol${SUFFIX} drive.o volume.o context.o hw.o tools.o initialisation.o ${FSDIR}rvol.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o rvol${SUFFIX} ${OFILE_2} ${FSDIR}rvol.c ${LIBS} ${INCDIR}
 
+OFILE_3 = ${OFILE_2} filesystem.o
 if_status: filesystem ${FSDIR}if_status.c
-	$(CC) $(CFLAGS) -o if_status${SUFFIX} drive.o volume.o hw.o context.o filesystem.o tools.o initialisation.o ${FSDIR}if_status.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_status${SUFFIX} ${OFILE_3} ${FSDIR}if_status.c ${LIBS} ${INCDIR}
+
+
+OFILE_4 = ${OFILE_3} ifile.o
+mknfs: volume drive filesystem tools ifile ${FSDIR}mknfs.c
+	$(CC) $(CFLAGS) -o mknfs${SUFFIX} ${OFILE_4} ${FSDIR}mknfs.c ${LIBS} ${INCDIR}
 
 if_pfile: ifile ${FSDIR}if_pfile.c
-	$(CC) $(CFLAGS) -o if_pfile${SUFFIX} drive.o volume.o hw.o context.o initialisation.o filesystem.o ifile.o tools.o ${FSDIR}if_pfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_pfile${SUFFIX} ${OFILE_4} ${FSDIR}if_pfile.c ${LIBS} ${INCDIR}
 
 if_nfile: ifile ${FSDIR}if_nfile.c
-	$(CC) $(CFLAGS) -o if_nfile${SUFFIX} drive.o volume.o hw.o context.o initialisation.o filesystem.o ifile.o tools.o ${FSDIR}if_nfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_nfile${SUFFIX} ${OFILE_4} ${FSDIR}if_nfile.c ${LIBS} ${INCDIR}
 
 if_dfile: ifile ${FSDIR}if_dfile.c
-	$(CC) $(CFLAGS) -o if_dfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o initialisation.o ifile.o tools.o ${FSDIR}if_dfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_dfile${SUFFIX} ${OFILE_4} ${FSDIR}if_dfile.c ${LIBS} ${INCDIR}
 
 if_cfile: ifile ${FSDIR}if_cfile.c
-	$(CC) $(CFLAGS) -o if_cfile${SUFFIX} drive.o volume.o hw.o context.o filesystem.o initialisation.o ifile.o tools.o ${FSDIR}if_cfile.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o if_cfile${SUFFIX} ${OFILE_4} ${FSDIR}if_cfile.c ${LIBS} ${INCDIR}
 
 
 ###------------------------------
@@ -108,12 +120,14 @@ if_cfile: ifile ${FSDIR}if_cfile.c
 
 CMDDIR = ${SRCDIR}shell/
 
+OFILE_CMD = ${addsuffix .o, \
+my_cd my_compute my_ls my_mkdir my_dumps my_pwd cmd}
+
 shell: cmd dir ifile volume filesystem tools scheduler ${CMDDIR}shell.c
-	$(CC) $(CFLAGS) -o shell${SUFFIX} initialisation.o cmd.o file.o ifile.o drive.o filesystem.o tools.o volume.o dir.o my_ls.o my_cd.o my_pwd.o my_compute.o my_mkdir.o my_dumps.o context.o hw.o ${CMDDIR}shell.c ${LIBS} ${INCDIR}
+	$(CC) $(CFLAGS) -o shell${SUFFIX} ${OFILE_4} file.o dir.o ${OFILE_CMD} ${CMDDIR}shell.c ${LIBS} ${INCDIR}
 
 cmd: my_cd my_ls my_pwd my_compute my_mkdir my_dumps ${CMDDIR}cmd.c ${INCLUDE}cmd.h
 	$(CC) $(CFLAGS) -o cmd.o -c ${CMDDIR}cmd.c ${INCDIR}
-
 
 my_ls: ${CMDDIR}my_ls.c ${INCLUDE}my_ls.h
 	$(CC) $(CFLAGS) -o my_ls.o -c ${CMDDIR}my_ls.c ${INCDIR}
@@ -147,9 +161,6 @@ hw: ${INCLUDE}hw.h ${SCHEDDIR}hw.c
 
 tp5: context hw
 	${CC} ${CFLAGS} -o sched${SUFFIX} context.o hw.o ${SCHEDDIR}tp5.c ${INCDIR}
-
-# prod_con: context
-# 	${CC} ${CFLAGS} -o prod_con${SUFFIX} context.o hw.o ${SCHEDDIR}prod_con.c ${INCDIR}
 
 ###------------------------------
 ### Testing rules
