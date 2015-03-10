@@ -1,4 +1,5 @@
 #include "drive.h"
+#include "initialisation.h"
 
 int main(){
 	printf("Création du disque.\n");

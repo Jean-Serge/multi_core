@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "volume.h"
 #include "drive.h"
+#include "initialisation.h"
 
 void print_mbr(struct mbr_s *mbr){
 	int i;

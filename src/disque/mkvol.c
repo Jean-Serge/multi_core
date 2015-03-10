@@ -1,4 +1,5 @@
 #include "mkvol.h"
+#include "initialisation.h"
 
 static struct mbr_s *mbr = NULL;
 

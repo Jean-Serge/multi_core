@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "file.h"
+#include "initialisation.h"
 
 #define ERR_OK            0
 #define ERR_ARGT          1

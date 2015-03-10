@@ -2,6 +2,7 @@
 #include <string.h>
 #include "filesystem.h"
 #include "volume.h"
+#include "initialisation.h"
 
 #define ERR_OK        0
 #define ERR_ARGT      1

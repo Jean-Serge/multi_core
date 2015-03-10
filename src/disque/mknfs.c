@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "initialisation.h"
 #include "drive.h"
 #include "volume.h"
 #include "filesystem.h"

@@ -51,7 +51,7 @@ frmt: drive volume context ${FSDIR}frmt.c
 	$(CC) $(CFLAGS) -o frmt${SUFFIX} context.o hw.o drive.o volume.o tools.o initialisation.o ${FSDIR}frmt.c ${LIBS} ${INCDIR}
 
 drive: context ${FSDIR}drive.c ${INCLUDE}drive.h
-	$(CC) $(CFLAGS) -o drive.o initialisation.o -c ${FSDIR}drive.c ${INCDIR}
+	$(CC) $(CFLAGS) -o drive.o -c ${FSDIR}drive.c ${INCDIR}
 
 volume: tools drive ${FSDIR}volume.c ${INCLUDE}volume.h
 	$(CC) $(CFLAGS) -o volume.o -c ${FSDIR}volume.c ${INCDIR}
