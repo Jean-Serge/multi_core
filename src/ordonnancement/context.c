@@ -1,12 +1,8 @@
 #include "context.h"
 #include <stdlib.h>
 
-/* struct ctx_s *crt_ctx = NULL; */
-/* struct ctx_s *main_ctx = NULL; */
-
 struct ctx_s *ctxs[N_CORE_MAX];
 
-/* int current_core = 0; */
 int nb_ctx = 0;
 
 void del_ctx(struct ctx_s *ctx);
@@ -44,7 +40,7 @@ int create_ctx_on_core(int stack_size, func_t f, char **args, int argc, char *na
 	init_ctx(ctx, stack_size, f, args, argc);
 	ctx->ctx_name = name;
 
-	add_ctx(ctx, core % N_CORE_MAX);
+	add_ctx(ctx, core);
 	nb_ctx++;
 	irq_enable();
 	return C_RETURN_SUCCESS;
@@ -116,12 +112,6 @@ void yield(){
 	while(ctx != NULL && ctx->ctx_etat == TERMINATED){
 		fprintf(stderr, "\n%s is TERMINATED\n", ctx->ctx_name);
 		nb_terminated++;
-		/* if(nb_ctx == nb_terminated){ */
-		/* 	fprintf(stderr, "Return to main (%p)\n", ctx); */
-		/* 	irq_enable(); */
-		/* 	switch_to_ctx(main_ctx); */
-		/* } */
-		/* del_ctx(ctx); */
 		ctx = ctx->ctx_next;
 	}
 
@@ -143,19 +133,6 @@ void switch_to_ctx(struct ctx_s *ctx){
 	assert(ctx->ctx_magic == CTX_MAGIC);
 	fprintf(stderr, "\nSwitch to ctx %s\n", ctxs[core]->ctx_name);
 	fflush(stdout);
-
-	/* if(!main_ctx){ */
-	/*   main_ctx = (struct ctx_s *)malloc(sizeof(struct ctx_s)); */
-	/*   main_ctx->ctx_magic = CTX_MAGIC; */
-	/*   main_ctx->ctx_etat = ACTIVATED; */
-	/*   main_ctx->ctx_name = "main"; */
-	/*   fprintf(stderr,"Creating main context (%p)\n", main_ctx); */
-
-	/*   asm ("movl %%ebp, %0\n" :"=r"(main_ctx->ctx_ebp)); */
-	/*   asm ("movl %%esp, %0\n" :"=r"(main_ctx->ctx_esp)); */
-
-	/*   /\* add_ctx(main_ctx); *\/ */
-	/* } */
 
 	asm("movl %%ebp, %0" : "=r"(ctxs[core]->ctx_ebp));
 	asm("movl %%esp, %0" : "=r"(ctxs[core]->ctx_esp));
@@ -244,8 +221,6 @@ struct ctx_s *next_ctx(){
 /************************* Gestion des interruptions  *************************/
 void start_sched(){
 	fprintf(stderr, "***** start sched ******\n");
-	/* setup_irq(TIMER_IRQ, yield); */
-	/* start_hw(); */
 	yield();
 }
 
